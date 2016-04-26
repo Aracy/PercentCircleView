@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 圆形百分比控件 -->
+    <declare-styleable name="PercentCircleView">
+        <attr name="reach_color" format="color"/>
+        <attr name="unreach_color" format="color"/>
+        <attr name="circle_width" format="dimension"/>
+        <attr name="percent" format="float"/>
+        <attr name="percent_text_color" format="color"/>
+    </declare-styleable>
+</resources>
