@@ -3,5 +3,5 @@
 this is CircleView of Percent with animation.
 
 
-![github](/git/precent.gif)
+![github](git/precent.gif)
 
