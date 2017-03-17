@@ -1,4 +1,4 @@
-package com.sun.bl.percentcircleview;
+package com.aracy.ui;
 
 import org.junit.Test;
 

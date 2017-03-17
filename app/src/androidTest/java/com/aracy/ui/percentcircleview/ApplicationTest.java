@@ -1,4 +1,4 @@
-package com.sun.bl.percentcircleview;
+package com.aracy.ui.percentcircleview;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

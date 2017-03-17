@@ -1,4 +1,4 @@
-package com.sun.bl.library;
+package com.aracy.ui;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

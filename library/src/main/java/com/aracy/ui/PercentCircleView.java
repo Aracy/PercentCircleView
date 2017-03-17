@@ -1,4 +1,4 @@
-package com.sun.bl.library;
+package com.aracy.ui;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -10,18 +10,22 @@ import android.graphics.Paint.Style;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.ViewUtils;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.aracy.ui.utils.ViewUtil;
 
 /***
  * 圆形百分比控件
  *
- * @author sun.bl
+ * @author aracy
  * @version [1.0, 2015-12-28]
  */
 public class PercentCircleView extends View {
 
-    public static String TAG = "PercentCircleView";
+    public static final String TAG = "PercentCircleView";
 
     private final static int minWidth = 100;
 
@@ -104,7 +108,7 @@ public class PercentCircleView extends View {
         mPercentPaint.setAntiAlias(true);
         mPercentPaint.setFilterBitmap(true);
         mPercentPaint.setDither(true);
-        
+
         // 设置字体（robot字体：细）
         Typeface font = Typeface.create("sans-serif-light", Typeface.NORMAL);
         mPercentPaint.setTypeface(font);
@@ -112,156 +116,16 @@ public class PercentCircleView extends View {
         mCurrentPercent = 0;
     }
 
-    /***
-     * 获取百分比圆形颜色
-     *
-     * @return
-     * @see [setReachColor]
-     */
-    public int getReachColor() {
-        return mReachColor;
-    }
 
-    /****
-     * 设置百分比圆形的颜色
-     *
-     * @param reachColor 百分比圆形的颜色
-     * @see [类、类#方法、类#成员]
-     */
-    public void setReachColor(int reachColor) {
-        this.mReachColor = reachColor;
-        mReachPaint.setColor(mReachColor);
-        invalidate();
-    }
 
-    /***
-     * 设置百分比圆形的颜色
-     *
-     * @param reachRes 百分比圆形的颜色资源
-     * @see [类、类#方法、类#成员]
-     */
-    public void setReachColorRes(int reachRes) {
-        this.mReachColor = ContextCompat.getColor(getContext(), reachRes);
-        mReachPaint.setColor(mReachColor);
-        invalidate();
-    }
 
-    /***
-     * 获取没有达到的颜色
-     *
-     * @return
-     * @see [setUnReachColor]
-     */
-    public int getUnReachColor() {
-        return mUnReachColor;
-    }
-
-    /**
-     * 设置百分比没有达到的圆形颜色
-     *
-     * @param unReachColor 颜色
-     * @see [类、类#方法、类#成员]
-     */
-    public void setUnReachColor(int unReachColor) {
-        this.mUnReachColor = unReachColor;
-        mUnReachPaint.setColor(mUnReachColor);
-        invalidate();
-    }
-
-    /***
-     * 设置百分比没有达到的圆形颜色
-     *
-     * @param unReachRes 颜色资源
-     * @see [类、类#方法、类#成员]
-     */
-    public void setUnReachColorRes(int unReachRes) {
-        this.mUnReachColor = ContextCompat.getColor(getContext(), unReachRes);
-        mUnReachPaint.setColor(mUnReachColor);
-        invalidate();
-    }
-
-    /***
-     * 获取圆形的宽度
-     *
-     * @return
-     * @see [setCircleWidth]
-     */
-    public float getCircleWidth() {
-        return mCircleWidth;
-    }
-
-    /***
-     * 设置圆形的宽度
-     *
-     * @param circleWidth 圆形宽度（单位px）
-     * @see [类、类#方法、类#成员]
-     */
-    public void setCircleWidth(float circleWidth) {
-        this.mCircleWidth = circleWidth;
-        mReachPaint.setStrokeWidth(mCircleWidth);
-        mUnReachPaint.setStrokeWidth(mCircleWidth);
-        invalidate();
-    }
-
-    /***
-     * 获取百分比的字体颜色
-     *
-     * @return
-     * @see [类、类#方法、类#成员]
-     */
-    public int getPercentTextColor() {
-        return mPercentTextColor;
-    }
-
-    /***
-     * 设置百分比的字体颜色
-     *
-     * @param percentTextColor
-     * @see [类、类#方法、类#成员]
-     */
-    public void setPercentTextColor(int percentTextColor) {
-        this.mPercentTextColor = percentTextColor;
-        mPercentPaint.setColor(mPercentTextColor);
-        invalidate();
-    }
-
-    /***
-     * 设置百分比的字体颜色
-     *
-     * @param percentTextColorRes
-     * @see [类、类#方法、类#成员]
-     */
-    public void setPercentTextColorRes(int percentTextColorRes) {
-        this.mPercentTextColor = ContextCompat.getColor(getContext(), percentTextColorRes);
-        mPercentPaint.setColor(mPercentTextColor);
-        invalidate();
-    }
-
-    /**
-     * 获取已经设置的百分比
-     *
-     * @return 小于0则为初始化状态
-     * @see [setPercent]
-     */
-    public float getPercent() {
-        return mPercent;
-    }
-
-    /**
-     * 设置百分比
-     *
-     * @param percent 小于0则为初始化状态
-     * @see [getPercent]
-     */
-    public void setPercent(float percent) {
-        this.mPercent = percent;
-        invalidate();
-    }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        mMeasureWidth = measureWidth(widthMeasureSpec);
-        mMeasureHeight = measureHeight(heightMeasureSpec);
+        int minWidth = ViewCompat.getMinimumWidth(this);
+        int minHeight = ViewCompat.getMinimumHeight(this);
+        mMeasureWidth = ViewUtil.chooseSize(widthMeasureSpec, getPaddingLeft() + getPaddingRight(), minWidth);
+        mMeasureHeight = ViewUtil.chooseSize(heightMeasureSpec, getPaddingTop() + getPaddingBottom(), minHeight);
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
@@ -286,7 +150,7 @@ public class PercentCircleView extends View {
 
         // 如果百分比大于0，绘制百分比到达区域
         if (mPercent >= 0) {
-            canvas.drawArc(oval, 270f, -360f * (mCurrentPercent / 100), false, mReachPaint);
+            canvas.drawArc(oval, 270f, 360f * (mCurrentPercent / 100), false, mReachPaint);
         }
 
         // 根据圆的半径计算字体的大小
@@ -329,63 +193,137 @@ public class PercentCircleView extends View {
         super.onDraw(canvas);
     }
 
-    /**
-     * 测量控件的宽度
-     *
-     * @param measureSpec
-     * @return
-     * @see [类、类#方法、类#成员]
-     */
-    private int measureWidth(int measureSpec) {
-        int result;
-        int specMode = MeasureSpec.getMode(measureSpec);
-        int specSize = MeasureSpec.getSize(measureSpec);
-
-        if (specMode == MeasureSpec.EXACTLY) {
-            result = specSize;
-        } else {
-            result = minWidth + getPaddingLeft() + getPaddingRight();
-            if (specMode == MeasureSpec.AT_MOST) {
-                result = Math.min(result, specSize);
-            }
-        }
-
-        return result;
-    }
-
-    /**
-     * 测量控件的高度
-     *
-     * @param measureSpec
-     * @return
-     * @see [类、类#方法、类#成员]
-     */
-    private int measureHeight(int measureSpec) {
-        int result;
-        int specMode = MeasureSpec.getMode(measureSpec);
-        int specSize = MeasureSpec.getSize(measureSpec);
-
-        if (specMode == MeasureSpec.EXACTLY) {
-            result = specSize;
-        } else {
-            result = minHeight + getPaddingTop() + getPaddingBottom();
-            if (specMode == MeasureSpec.AT_MOST) {
-                result = Math.min(result, specSize);
-            }
-        }
-        return result;
-    }
 
     /**
      * 设备独立像素到物理像素转换
      *
-     * @param context
+     * @param context 上线文
      * @param dipValue 设备独立像素
      * @return float 物理像素
      */
     private float dip2px(Context context, float dipValue) {
         final float scale = context.getResources().getDisplayMetrics().density;
         return dipValue * scale + 0.5f;
+    }
+
+    /****
+     * 设置百分比圆形的颜色
+     *
+     * @param reachColor 百分比圆形的颜色
+     * @see [类、类#方法、类#成员]
+     */
+    public void setReachColor(int reachColor) {
+        this.mReachColor = reachColor;
+        mReachPaint.setColor(mReachColor);
+        invalidate();
+    }
+
+    /***
+     * 设置百分比圆形的颜色
+     *
+     * @param reachRes 百分比圆形的颜色资源
+     * @see [类、类#方法、类#成员]
+     */
+    public void setReachColorRes(int reachRes) {
+        this.mReachColor = ContextCompat.getColor(getContext(), reachRes);
+        mReachPaint.setColor(mReachColor);
+        invalidate();
+    }
+
+
+
+    /**
+     * 设置百分比没有达到的圆形颜色
+     *
+     * @param unReachColor 颜色
+     * @see [类、类#方法、类#成员]
+     */
+    public void setUnReachColor(int unReachColor) {
+        this.mUnReachColor = unReachColor;
+        mUnReachPaint.setColor(mUnReachColor);
+        invalidate();
+    }
+
+    /***
+     * 设置百分比没有达到的圆形颜色
+     *
+     * @param unReachRes 颜色资源
+     * @see [类、类#方法、类#成员]
+     */
+    public void setUnReachColorRes(int unReachRes) {
+        this.mUnReachColor = ContextCompat.getColor(getContext(), unReachRes);
+        mUnReachPaint.setColor(mUnReachColor);
+        invalidate();
+    }
+
+
+
+    /***
+     * 设置圆形的宽度
+     *
+     * @param circleWidth 圆形宽度（单位px）
+     * @see [类、类#方法、类#成员]
+     */
+    public void setCircleWidth(float circleWidth) {
+        this.mCircleWidth = circleWidth;
+        mReachPaint.setStrokeWidth(mCircleWidth);
+        mUnReachPaint.setStrokeWidth(mCircleWidth);
+        invalidate();
+    }
+
+    /***
+     * 获取百分比的字体颜色
+     *
+     * @return 字体颜色
+     * @see [类、类#方法、类#成员]
+     */
+    public int getPercentTextColor() {
+        return mPercentTextColor;
+    }
+
+    /***
+     * 设置百分比的字体颜色
+     *
+     * @param percentTextColor 字体颜色
+     * @see [类、类#方法、类#成员]
+     */
+    public void setPercentTextColor(int percentTextColor) {
+        this.mPercentTextColor = percentTextColor;
+        mPercentPaint.setColor(mPercentTextColor);
+        invalidate();
+    }
+
+    /***
+     * 设置百分比的字体颜色
+     *
+     * @param percentTextColorRes
+     * @see [类、类#方法、类#成员]
+     */
+    public void setPercentTextColorRes(int percentTextColorRes) {
+        this.mPercentTextColor = ContextCompat.getColor(getContext(), percentTextColorRes);
+        mPercentPaint.setColor(mPercentTextColor);
+        invalidate();
+    }
+
+    /**
+     * 获取已经设置的百分比
+     *
+     * @return 小于0则为初始化状态
+     * @see [setPercent]
+     */
+    public float getPercent() {
+        return mPercent;
+    }
+
+    /**
+     * 设置百分比
+     *
+     * @param percent 小于0则为初始化状态
+     * @see [getPercent]
+     */
+    public void setPercent(float percent) {
+        this.mPercent = percent;
+        invalidate();
     }
 
 

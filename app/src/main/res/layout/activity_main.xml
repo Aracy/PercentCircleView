@@ -7,15 +7,14 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context="com.sun.bl.percentcircleview.MainActivity">
+    tools:context="com.aracy.ui.percentcircleview.MainActivity">
 
-    <com.sun.bl.library.PercentCircleView
+    <com.aracy.ui.PercentCircleView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="35dp"
-        app:circle_width="5dp"
+        app:circle_width="10dp"
         app:percent="85"
+        app:reach_color="#226647"
         />
-
-
 </LinearLayout>
