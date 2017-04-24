@@ -10,11 +10,21 @@
     tools:context="com.aracy.ui.percentcircleview.MainActivity">
 
     <com.aracy.ui.PercentCircleView
+        android:id="@+id/pcv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_margin="35dp"
         app:circle_width="10dp"
-        app:percent="85"
+        android:layout_weight="1"
         app:reach_color="#226647"
         />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="setPercent"
+        android:gravity="center"
+        android:text="设置百分比"
+        />
+
 </LinearLayout>

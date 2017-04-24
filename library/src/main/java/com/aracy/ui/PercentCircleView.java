@@ -9,6 +9,8 @@ import android.graphics.Paint.FontMetrics;
 import android.graphics.Paint.Style;
 import android.graphics.RectF;
 import android.graphics.Typeface;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.ViewUtils;
@@ -26,10 +28,6 @@ import com.aracy.ui.utils.ViewUtil;
 public class PercentCircleView extends View {
 
     public static final String TAG = "PercentCircleView";
-
-    private final static int minWidth = 100;
-
-    private final static int minHeight = 100;
 
     private final static int DEFAULT_REACH_COLOR = Color.parseColor("#FC423A");// 达到的百分比默认颜色
 
@@ -117,9 +115,6 @@ public class PercentCircleView extends View {
     }
 
 
-
-
-
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int minWidth = ViewCompat.getMinimumWidth(this);
@@ -197,7 +192,7 @@ public class PercentCircleView extends View {
     /**
      * 设备独立像素到物理像素转换
      *
-     * @param context 上线文
+     * @param context  上线文
      * @param dipValue 设备独立像素
      * @return float 物理像素
      */
@@ -231,7 +226,6 @@ public class PercentCircleView extends View {
     }
 
 
-
     /**
      * 设置百分比没有达到的圆形颜色
      *
@@ -255,7 +249,6 @@ public class PercentCircleView extends View {
         mUnReachPaint.setColor(mUnReachColor);
         invalidate();
     }
-
 
 
     /***
@@ -326,5 +319,84 @@ public class PercentCircleView extends View {
         invalidate();
     }
 
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        Parcelable superState = super.onSaveInstanceState();
+        PercentSaveState saveState = new PercentSaveState(superState);
+        saveState.mPercent = mPercent;
+        saveState.mCircleWidth = mCircleWidth;
+        saveState.mPercentTextColor = mPercentTextColor;
+        saveState.mUnReachColor = mUnReachColor;
+        saveState.mReachColor = mReachColor;
+        return saveState;
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        if (!(state instanceof PercentSaveState)) {
+            super.onRestoreInstanceState(state);
+        }
+        PercentSaveState saveState = (PercentSaveState) state;
+        super.onRestoreInstanceState(saveState.getSuperState());
+        mCircleWidth = saveState.mCircleWidth;
+        mPercent = saveState.mPercent;
+        mReachColor = saveState.mReachColor;
+        mUnReachColor = saveState.mUnReachColor;
+        mPercentTextColor = saveState.mPercentTextColor;
+        invalidate();
+    }
+
+    private static class PercentSaveState extends BaseSavedState {
+
+        private int mReachColor; // 达到的百分比颜色
+
+        private int mUnReachColor; // 没有达到的百分比颜色
+
+        private int mPercentTextColor;// 百分比数据的颜色
+
+        private float mCircleWidth;// 圆形框的宽度
+
+        private float mPercent;// 百分比
+
+        PercentSaveState(Parcel source) {
+            super(source);
+            mReachColor = source.readInt();
+            mUnReachColor = source.readInt();
+            mPercentTextColor = source.readInt();
+            mCircleWidth = source.readFloat();
+            mPercent = source.readFloat();
+        }
+
+
+         PercentSaveState(Parcelable superState) {
+            super(superState);
+        }
+
+        @Override
+        public void writeToParcel(Parcel out, int flags) {
+            super.writeToParcel(out, flags);
+            out.writeInt(mReachColor);
+            out.writeInt(mUnReachColor);
+            out.writeInt(mPercentTextColor);
+            out.writeFloat(mCircleWidth);
+            out.writeFloat(mPercent);
+        }
+
+        public static final Parcelable.Creator<PercentSaveState> CREATOR = new Parcelable.Creator<PercentSaveState>() {
+
+            @Override
+            public PercentSaveState createFromParcel(Parcel source) {
+                return new PercentSaveState(source);
+            }
+
+            @Override
+            public PercentSaveState[] newArray(int size) {
+                return new PercentSaveState[size];
+            }
+
+
+        };
+
+    }
 
 }
